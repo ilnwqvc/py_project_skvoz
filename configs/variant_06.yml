@@ -1,0 +1,64 @@
+variant_id: "06"
+theme: "Погода (архив) - Токио"
+source_type: "open_meteo"
+
+entity:
+  city_id: "JP_TYO"
+  city_name: "Токио"
+  country_code: "JP"
+  latitude: 35.6762
+  longitude: 139.6503
+  timezone: "Asia/Tokyo"
+
+api:
+  base_url: "https://archive-api.open-meteo.com/v1/archive"
+  method: "GET"
+  timeout_sec: 30
+  params:
+    latitude: 35.6762
+    longitude: 139.6503
+    timezone: "Asia/Tokyo"
+    hourly:
+      - temperature_2m
+      - relative_humidity_2m
+      - precipitation
+      - wind_speed_10m
+  date_params:
+    start_date: "2026-02-01"   
+    end_date: "2026-03-01"
+
+storage:
+  raw_path: "data/raw"
+
+normalized_schema:
+  - name: ts
+    type: timestamp
+    desc: "Дата-время измерения (локальная TZ)."
+  - name: temperature_2m
+    type: float
+  - name: relative_humidity_2m
+    type: float
+  - name: precipitation
+    type: float
+  - name: wind_speed_10m
+    type: float
+  - name: city_id
+    type: string
+
+kpis_draft:
+  - name: T_mean
+    desc: "Средняя температура по дням"
+  - name: P_sum
+    desc: "Суммарные осадки по дням"
+  - name: max_wind_top5
+    desc: "Топ-5 дней по максимальной скорости ветра"
+  - name: rainy_hours
+    desc: "Количество часов с precipitation > 0 по дням"
+
+dq_rules:
+  - "ts IS NOT NULL"
+  - "ts монотонно возрастает внутри одной загрузки"
+  - "temperature_2m BETWEEN -80 AND 60"
+  - "relative_humidity_2m BETWEEN 0 AND 100"
+  - "precipitation >= 0"
+  - "NO DUPLICATES ON (city_id, ts)"
