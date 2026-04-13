@@ -1,4 +1,3 @@
-import os
 import sys
 import yaml
 import json
@@ -7,35 +6,64 @@ from datetime import datetime
 from pathlib import Path
 
 
+
 def load_config(path: str) -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
-def build_request_params(cfg: dict) -> dict:
-    params = cfg["api"]["params"].copy()
-    params["start_date"] = cfg["api"]["date_params"]["start_date"]
-    params["end_date"] = cfg["api"]["date_params"]["end_date"]
 
-    # hourly должен быть строкой через запятую
+def load_state(state_path: Path) -> dict:
+    if not state_path.exists():
+        return {"last_watermark": None, "last_run": None}
+
+    with open(state_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_state(state_path: Path, state: dict):
+    with open(state_path, "w", encoding="utf-8") as f:
+        json.dump(state, f, ensure_ascii=False, indent=2)
+
+
+
+def build_request_params(cfg: dict, mode: str, state: dict) -> dict:
+    params = cfg["api"]["params"].copy()
+
+    if mode == "full" or state["last_watermark"] is None:
+        start_date = cfg["api"]["date_params"]["start_date"]
+    else:
+        start_date = state["last_watermark"]
+
+    end_date = cfg["api"]["date_params"]["end_date"]
+
+    params["start_date"] = start_date
+    params["end_date"] = end_date
+
     if isinstance(params["hourly"], list):
         params["hourly"] = ",".join(params["hourly"])
 
     return params
 
 
-def extract_data(cfg: dict) -> dict:
+def extract_data(cfg: dict, mode: str, state: dict) -> dict:
     url = cfg["api"]["base_url"]
     timeout = cfg["api"].get("timeout_sec", 30)
-    params = build_request_params(cfg)
+
+    params = build_request_params(cfg, mode, state)
+
+    print(f"EXTRACT MODE: {mode}")
+    print(f"Запрос с {params['start_date']} по {params['end_date']}")
 
     try:
         response = requests.get(url, params=params, timeout=timeout)
         response.raise_for_status()
         return response.json()
+
     except requests.exceptions.Timeout:
         print("Ошибка: таймаут запроса")
         sys.exit(1)
+
     except requests.exceptions.RequestException as e:
         print(f"HTTP ошибка: {e}")
         sys.exit(1)
@@ -57,13 +85,26 @@ def save_raw(data: dict, cfg: dict):
     print(f"Raw файл сохранён: {file_path}")
 
 
-def main():
-    config_path = "configs/variant_06.yml"
-    cfg = load_config(config_path)
+def extract_new_watermark(data: dict) -> str:
+    try:
+        times = data["hourly"]["time"]
+        return max(times)
+    except Exception:
+        return None
 
-    data = extract_data(cfg)
+
+
+def run_extract(cfg: dict, mode: str):
+    state_path = Path(cfg["storage"]["state_path"])
+    state = load_state(state_path)
+
+    data = extract_data(cfg, mode, state)
     save_raw(data, cfg)
+
+    new_watermark = extract_new_watermark(data)
+
+    return data, new_watermark
 
 
 if __name__ == "__main__":
-    main()
+    print("Используй через pipeline.py")

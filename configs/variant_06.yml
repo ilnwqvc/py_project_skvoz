@@ -27,9 +27,6 @@ api:
     start_date: "2026-02-01"   
     end_date: "2026-03-01"
 
-storage:
-  raw_path: "data/raw"
-
 normalized_schema:
   - name: ts
     type: timestamp
@@ -62,3 +59,7 @@ dq_rules:
   - "relative_humidity_2m BETWEEN 0 AND 100"
   - "precipitation >= 0"
   - "NO DUPLICATES ON (city_id, ts)"
+
+storage:
+  raw_path: data/raw
+  state_path: data/state.json
