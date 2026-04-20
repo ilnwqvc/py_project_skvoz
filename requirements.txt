@@ -1,9 +1,7 @@
 pandas
+matplotlib
 requests
 pyyaml
 numpy
 psycopg2-binary
 sqlalchemy
-pgAdmin
-DBeaver
-psql
