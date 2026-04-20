@@ -5,6 +5,7 @@ from datetime import datetime
 
 from extract import run_extract, load_config
 from transform import transform_data, save_normalized, build_mart, save_mart
+from dq import run_dq
 from load import load_to_db
 
 
@@ -42,6 +43,10 @@ def main():
 
     mart = build_mart(full_df)
     save_mart(mart, cfg)
+
+    dq_report = run_dq(args.config, layers=["normalized", "mart"])
+    if dq_report["summary"]["overall_status"] == "FAIL":
+        raise ValueError("DQ checks failed. Load stopped.")
 
     load_to_db()
 

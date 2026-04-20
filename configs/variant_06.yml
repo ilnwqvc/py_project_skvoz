@@ -53,12 +53,86 @@ kpis_draft:
     desc: "Количество часов с precipitation > 0 по дням"
 
 dq_rules:
-  - "ts IS NOT NULL"
-  - "ts монотонно возрастает внутри одной загрузки"
-  - "temperature_2m BETWEEN -80 AND 60"
-  - "relative_humidity_2m BETWEEN 0 AND 100"
-  - "precipitation >= 0"
-  - "NO DUPLICATES ON (city_id, ts)"
+  normalized:
+    - name: normalized_not_empty
+      type: non_empty
+      severity: FAIL
+    - name: normalized_not_null_keys
+      type: not_null
+      severity: FAIL
+      columns: [ts, city_id]
+    - name: normalized_unique_business_key
+      type: unique_key
+      severity: FAIL
+      columns: [city_id, ts]
+    - name: normalized_ts_is_datetime
+      type: convertible_datetime
+      severity: FAIL
+      column: ts
+    - name: normalized_ts_monotonic
+      type: monotonic_increasing
+      severity: WARNING
+      column: ts
+      group_by: [city_id]
+    - name: normalized_temperature_range
+      type: numeric_range
+      severity: FAIL
+      column: temperature_2m
+      min: -80
+      max: 60
+    - name: normalized_humidity_range
+      type: numeric_range
+      severity: FAIL
+      column: relative_humidity_2m
+      min: 0
+      max: 100
+    - name: normalized_precipitation_non_negative
+      type: numeric_range
+      severity: FAIL
+      column: precipitation
+      min: 0
+    - name: normalized_city_allowed
+      type: allowed_values
+      severity: WARNING
+      column: city_id
+      values: [JP_TYO]
+  mart:
+    - name: mart_not_empty
+      type: non_empty
+      severity: FAIL
+    - name: mart_not_null_keys
+      type: not_null
+      severity: FAIL
+      columns: [date, city_id]
+    - name: mart_unique_business_key
+      type: unique_key
+      severity: FAIL
+      columns: [date, city_id]
+    - name: mart_date_is_datetime
+      type: convertible_datetime
+      severity: FAIL
+      column: date
+    - name: mart_precipitation_non_negative
+      type: numeric_range
+      severity: FAIL
+      column: P_sum
+      min: 0
+    - name: mart_rainy_hours_range
+      type: numeric_range
+      severity: WARNING
+      column: rainy_hours
+      min: 0
+      max: 24
+    - name: mart_wind_non_negative
+      type: numeric_range
+      severity: WARNING
+      column: wind_max
+      min: 0
+    - name: mart_city_allowed
+      type: allowed_values
+      severity: WARNING
+      column: city_id
+      values: [JP_TYO]
 
 storage:
   raw_path: data/raw

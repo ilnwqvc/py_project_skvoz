@@ -1,0 +1,249 @@
+{
+  "summary": {
+    "overall_status": "FAIL",
+    "counts": {
+      "PASS": 10,
+      "FAIL": 4,
+      "WARNING": 3
+    }
+  },
+  "layers": {
+    "normalized": [
+      {
+        "name": "normalized_not_empty",
+        "type": "non_empty",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Таблица не пустая",
+        "details": {
+          "row_count": 697
+        }
+      },
+      {
+        "name": "normalized_not_null_keys",
+        "type": "not_null",
+        "severity": "FAIL",
+        "status": "FAIL",
+        "reason": "Найдены NULL в критичных полях",
+        "details": {
+          "null_counts": {
+            "city_id": 1
+          }
+        }
+      },
+      {
+        "name": "normalized_unique_business_key",
+        "type": "unique_key",
+        "severity": "FAIL",
+        "status": "FAIL",
+        "reason": "Найдены дубли по бизнес-ключу",
+        "details": {
+          "columns": [
+            "city_id",
+            "ts"
+          ],
+          "duplicate_rows": 2,
+          "sample": [
+            {
+              "city_id": "JP_TYO",
+              "ts": "2026-02-01 01:00:00"
+            },
+            {
+              "city_id": "JP_TYO",
+              "ts": "2026-02-01 01:00:00"
+            }
+          ]
+        }
+      },
+      {
+        "name": "normalized_ts_is_datetime",
+        "type": "convertible_datetime",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Колонка корректно преобразуется в datetime",
+        "details": {
+          "column": "ts"
+        }
+      },
+      {
+        "name": "normalized_ts_monotonic",
+        "type": "monotonic_increasing",
+        "severity": "WARNING",
+        "status": "WARNING",
+        "reason": "Нарушен монотонный порядок",
+        "details": {
+          "column": "ts",
+          "group_by": [
+            "city_id"
+          ],
+          "invalid_groups": [
+            "('JP_TYO',)"
+          ]
+        }
+      },
+      {
+        "name": "normalized_temperature_range",
+        "type": "numeric_range",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Значения попадают в допустимый диапазон",
+        "details": {
+          "column": "temperature_2m"
+        }
+      },
+      {
+        "name": "normalized_humidity_range",
+        "type": "numeric_range",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Значения попадают в допустимый диапазон",
+        "details": {
+          "column": "relative_humidity_2m"
+        }
+      },
+      {
+        "name": "normalized_precipitation_non_negative",
+        "type": "numeric_range",
+        "severity": "FAIL",
+        "status": "FAIL",
+        "reason": "Есть значения вне диапазона",
+        "details": {
+          "column": "precipitation",
+          "invalid_rows": 1,
+          "sample": [
+            {
+              "precipitation": -5.0
+            }
+          ],
+          "min": 0
+        }
+      },
+      {
+        "name": "normalized_city_allowed",
+        "type": "allowed_values",
+        "severity": "WARNING",
+        "status": "WARNING",
+        "reason": "Есть значения вне допустимого списка",
+        "details": {
+          "column": "city_id",
+          "allowed": [
+            "JP_TYO"
+          ],
+          "invalid_rows": 1,
+          "sample": [
+            {
+              "city_id": NaN
+            }
+          ]
+        }
+      }
+    ],
+    "mart": [
+      {
+        "name": "mart_not_empty",
+        "type": "non_empty",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Таблица не пустая",
+        "details": {
+          "row_count": 29
+        }
+      },
+      {
+        "name": "mart_not_null_keys",
+        "type": "not_null",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "NULL в критичных полях не найден",
+        "details": {
+          "columns": [
+            "date",
+            "city_id"
+          ]
+        }
+      },
+      {
+        "name": "mart_unique_business_key",
+        "type": "unique_key",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Бизнес-ключ уникален",
+        "details": {
+          "columns": [
+            "date",
+            "city_id"
+          ]
+        }
+      },
+      {
+        "name": "mart_date_is_datetime",
+        "type": "convertible_datetime",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Колонка корректно преобразуется в datetime",
+        "details": {
+          "column": "date"
+        }
+      },
+      {
+        "name": "mart_precipitation_non_negative",
+        "type": "numeric_range",
+        "severity": "FAIL",
+        "status": "FAIL",
+        "reason": "Есть значения вне диапазона",
+        "details": {
+          "column": "P_sum",
+          "invalid_rows": 1,
+          "sample": [
+            {
+              "P_sum": -1.0
+            }
+          ],
+          "min": 0
+        }
+      },
+      {
+        "name": "mart_rainy_hours_range",
+        "type": "numeric_range",
+        "severity": "WARNING",
+        "status": "WARNING",
+        "reason": "Есть значения вне диапазона",
+        "details": {
+          "column": "rainy_hours",
+          "invalid_rows": 1,
+          "sample": [
+            {
+              "rainy_hours": 30
+            }
+          ],
+          "min": 0,
+          "max": 24
+        }
+      },
+      {
+        "name": "mart_wind_non_negative",
+        "type": "numeric_range",
+        "severity": "WARNING",
+        "status": "PASS",
+        "reason": "Значения попадают в допустимый диапазон",
+        "details": {
+          "column": "wind_max"
+        }
+      },
+      {
+        "name": "mart_city_allowed",
+        "type": "allowed_values",
+        "severity": "WARNING",
+        "status": "PASS",
+        "reason": "Недопустимых значений не найдено",
+        "details": {
+          "column": "city_id",
+          "allowed": [
+            "JP_TYO"
+          ]
+        }
+      }
+    ]
+  },
+  "demo_broken": true
+}
