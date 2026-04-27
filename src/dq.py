@@ -43,6 +43,23 @@ def check_non_empty(df: pd.DataFrame, rule: dict) -> dict:
     return make_result(rule, "FAIL", "Таблица пустая", {"row_count": 0})
 
 
+def check_expected_columns(df: pd.DataFrame, rule: dict) -> dict:
+    expected = list(rule["columns"])
+    actual = list(df.columns)
+    missing = [column for column in expected if column not in actual]
+    extra = [column for column in actual if column not in expected]
+
+    if not missing and not extra:
+        return make_result(rule, "PASS", "Список колонок совпадает с контрактом", {"columns": expected})
+
+    details = {"expected": expected, "actual": actual}
+    if missing:
+        details["missing_columns"] = missing
+    if extra:
+        details["extra_columns"] = extra
+    return make_result(rule, violation_status(rule), "Схема DataFrame не совпадает с контрактом", details)
+
+
 def check_not_null(df: pd.DataFrame, rule: dict) -> dict:
     columns = rule["columns"]
     null_counts = {column: int(df[column].isna().sum()) for column in columns}
@@ -148,6 +165,7 @@ def check_monotonic_increasing(df: pd.DataFrame, rule: dict) -> dict:
 
 
 CHECKS = {
+    "expected_columns": check_expected_columns,
     "non_empty": check_non_empty,
     "not_null": check_not_null,
     "unique_key": check_unique_key,

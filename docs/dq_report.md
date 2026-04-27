@@ -1,12 +1,15 @@
 # DQ Report
 
 - Overall status: **PASS**
-- PASS: 17
+- PASS: 19
 - FAIL: 0
 - WARNING: 0
 
 ## Layer: normalized
 
+- normalized_expected_columns: PASS (FAIL)
+  Причина: Список колонок совпадает с контрактом
+  Детали: {"columns": ["ts", "temperature_2m", "relative_humidity_2m", "precipitation", "wind_speed_10m", "city_id"]}
 - normalized_not_empty: PASS (FAIL)
   Причина: Таблица не пустая
   Детали: {"row_count": 696}
@@ -37,6 +40,9 @@
 
 ## Layer: mart
 
+- mart_expected_columns: PASS (FAIL)
+  Причина: Список колонок совпадает с контрактом
+  Детали: {"columns": ["date", "city_id", "T_mean", "P_sum", "wind_max", "rainy_hours"]}
 - mart_not_empty: PASS (FAIL)
   Причина: Таблица не пустая
   Детали: {"row_count": 29}

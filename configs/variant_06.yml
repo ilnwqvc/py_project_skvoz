@@ -42,6 +42,26 @@ normalized_schema:
   - name: city_id
     type: string
 
+mart_schema:
+  - name: date
+    type: date
+    desc: "Локальная календарная дата в таймзоне Asia/Tokyo."
+  - name: city_id
+    type: string
+    desc: "Идентификатор города."
+  - name: T_mean
+    type: float
+    desc: "Средняя температура за день."
+  - name: P_sum
+    type: float
+    desc: "Сумма осадков за день."
+  - name: wind_max
+    type: float
+    desc: "Максимальная скорость ветра за день."
+  - name: rainy_hours
+    type: integer
+    desc: "Количество часов, где precipitation > 0."
+
 kpis_draft:
   - name: T_mean
     desc: "Средняя температура по дням"
@@ -54,6 +74,10 @@ kpis_draft:
 
 dq_rules:
   normalized:
+    - name: normalized_expected_columns
+      type: expected_columns
+      severity: FAIL
+      columns: [ts, temperature_2m, relative_humidity_2m, precipitation, wind_speed_10m, city_id]
     - name: normalized_not_empty
       type: non_empty
       severity: FAIL
@@ -97,6 +121,10 @@ dq_rules:
       column: city_id
       values: [JP_TYO]
   mart:
+    - name: mart_expected_columns
+      type: expected_columns
+      severity: FAIL
+      columns: [date, city_id, T_mean, P_sum, wind_max, rainy_hours]
     - name: mart_not_empty
       type: non_empty
       severity: FAIL

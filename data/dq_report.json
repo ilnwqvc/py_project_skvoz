@@ -2,13 +2,30 @@
   "summary": {
     "overall_status": "PASS",
     "counts": {
-      "PASS": 17,
+      "PASS": 19,
       "FAIL": 0,
       "WARNING": 0
     }
   },
   "layers": {
     "normalized": [
+      {
+        "name": "normalized_expected_columns",
+        "type": "expected_columns",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Список колонок совпадает с контрактом",
+        "details": {
+          "columns": [
+            "ts",
+            "temperature_2m",
+            "relative_humidity_2m",
+            "precipitation",
+            "wind_speed_10m",
+            "city_id"
+          ]
+        }
+      },
       {
         "name": "normalized_not_empty",
         "type": "non_empty",
@@ -110,6 +127,23 @@
       }
     ],
     "mart": [
+      {
+        "name": "mart_expected_columns",
+        "type": "expected_columns",
+        "severity": "FAIL",
+        "status": "PASS",
+        "reason": "Список колонок совпадает с контрактом",
+        "details": {
+          "columns": [
+            "date",
+            "city_id",
+            "T_mean",
+            "P_sum",
+            "wind_max",
+            "rainy_hours"
+          ]
+        }
+      },
       {
         "name": "mart_not_empty",
         "type": "non_empty",
