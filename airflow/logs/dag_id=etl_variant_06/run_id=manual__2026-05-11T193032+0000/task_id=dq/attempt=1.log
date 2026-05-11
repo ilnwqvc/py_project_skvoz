@@ -1,0 +1,57 @@
+[2026-05-11T19:30:46.854+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-05-11T19:30:46.888+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_variant_06.dq manual__2026-05-11T19:30:32+00:00 [queued]>
+[2026-05-11T19:30:46.902+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_variant_06.dq manual__2026-05-11T19:30:32+00:00 [queued]>
+[2026-05-11T19:30:46.903+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 1
+[2026-05-11T19:30:46.919+0000] {taskinstance.py:2890} INFO - Executing <Task(BashOperator): dq> on 2026-05-11 19:30:32+00:00
+[2026-05-11T19:30:46.927+0000] {warnings.py:112} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=201) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-05-11T19:30:46.929+0000] {standard_task_runner.py:72} INFO - Started process 202 to run task
+[2026-05-11T19:30:46.930+0000] {standard_task_runner.py:104} INFO - Running: ['airflow', 'tasks', 'run', 'etl_variant_06', 'dq', 'manual__2026-05-11T19:30:32+00:00', '--job-id', '14', '--raw', '--subdir', 'DAGS_FOLDER/etl_variant_06.py', '--cfg-path', '/tmp/tmpx9bynud5']
+[2026-05-11T19:30:46.932+0000] {standard_task_runner.py:105} INFO - Job 14: Subtask dq
+[2026-05-11T19:30:46.994+0000] {task_command.py:467} INFO - Running <TaskInstance: etl_variant_06.dq manual__2026-05-11T19:30:32+00:00 [running]> on host d1b991a5d492
+[2026-05-11T19:30:47.081+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='etl_variant_06' AIRFLOW_CTX_TASK_ID='dq' AIRFLOW_CTX_EXECUTION_DATE='2026-05-11T19:30:32+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-05-11T19:30:32+00:00'
+[2026-05-11T19:30:47.081+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2026-05-11T19:30:47.096+0000] {subprocess.py:78} INFO - Tmp dir root location: /tmp
+[2026-05-11T19:30:47.097+0000] {subprocess.py:88} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/airflow/project && export PYTHONIOENCODING=UTF-8 && python src/etl_steps.py dq --config configs/variant_06.yml']
+[2026-05-11T19:30:47.109+0000] {subprocess.py:99} INFO - Output:
+[2026-05-11T19:30:48.578+0000] {subprocess.py:106} INFO - DQ SUMMARY
+[2026-05-11T19:30:48.579+0000] {subprocess.py:106} INFO - overall_status: PASS
+[2026-05-11T19:30:48.580+0000] {subprocess.py:106} INFO - PASS: 19
+[2026-05-11T19:30:48.580+0000] {subprocess.py:106} INFO - FAIL: 0
+[2026-05-11T19:30:48.581+0000] {subprocess.py:106} INFO - WARNING: 0
+[2026-05-11T19:30:48.581+0000] {subprocess.py:106} INFO - 
+[2026-05-11T19:30:48.582+0000] {subprocess.py:106} INFO - [normalized]
+[2026-05-11T19:30:48.582+0000] {subprocess.py:106} INFO - - normalized_expected_columns: PASS (FAIL) - Список колонок совпадает с контрактом
+[2026-05-11T19:30:48.582+0000] {subprocess.py:106} INFO - - normalized_not_empty: PASS (FAIL) - Таблица не пустая
+[2026-05-11T19:30:48.583+0000] {subprocess.py:106} INFO - - normalized_not_null_keys: PASS (FAIL) - NULL в критичных полях не найден
+[2026-05-11T19:30:48.583+0000] {subprocess.py:106} INFO - - normalized_unique_business_key: PASS (FAIL) - Бизнес-ключ уникален
+[2026-05-11T19:30:48.583+0000] {subprocess.py:106} INFO - - normalized_ts_is_datetime: PASS (FAIL) - Колонка корректно преобразуется в datetime
+[2026-05-11T19:30:48.584+0000] {subprocess.py:106} INFO - - normalized_ts_monotonic: PASS (WARNING) - Значения идут в монотонно возрастающем порядке
+[2026-05-11T19:30:48.584+0000] {subprocess.py:106} INFO - - normalized_temperature_range: PASS (FAIL) - Значения попадают в допустимый диапазон
+[2026-05-11T19:30:48.584+0000] {subprocess.py:106} INFO - - normalized_humidity_range: PASS (FAIL) - Значения попадают в допустимый диапазон
+[2026-05-11T19:30:48.585+0000] {subprocess.py:106} INFO - - normalized_precipitation_non_negative: PASS (FAIL) - Значения попадают в допустимый диапазон
+[2026-05-11T19:30:48.585+0000] {subprocess.py:106} INFO - - normalized_city_allowed: PASS (WARNING) - Недопустимых значений не найдено
+[2026-05-11T19:30:48.586+0000] {subprocess.py:106} INFO - 
+[2026-05-11T19:30:48.586+0000] {subprocess.py:106} INFO - [mart]
+[2026-05-11T19:30:48.586+0000] {subprocess.py:106} INFO - - mart_expected_columns: PASS (FAIL) - Список колонок совпадает с контрактом
+[2026-05-11T19:30:48.587+0000] {subprocess.py:106} INFO - - mart_not_empty: PASS (FAIL) - Таблица не пустая
+[2026-05-11T19:30:48.587+0000] {subprocess.py:106} INFO - - mart_not_null_keys: PASS (FAIL) - NULL в критичных полях не найден
+[2026-05-11T19:30:48.587+0000] {subprocess.py:106} INFO - - mart_unique_business_key: PASS (FAIL) - Бизнес-ключ уникален
+[2026-05-11T19:30:48.588+0000] {subprocess.py:106} INFO - - mart_date_is_datetime: PASS (FAIL) - Колонка корректно преобразуется в datetime
+[2026-05-11T19:30:48.588+0000] {subprocess.py:106} INFO - - mart_precipitation_non_negative: PASS (FAIL) - Значения попадают в допустимый диапазон
+[2026-05-11T19:30:48.588+0000] {subprocess.py:106} INFO - - mart_rainy_hours_range: PASS (WARNING) - Значения попадают в допустимый диапазон
+[2026-05-11T19:30:48.589+0000] {subprocess.py:106} INFO - - mart_wind_non_negative: PASS (WARNING) - Значения попадают в допустимый диапазон
+[2026-05-11T19:30:48.589+0000] {subprocess.py:106} INFO - - mart_city_allowed: PASS (WARNING) - Недопустимых значений не найдено
+[2026-05-11T19:30:48.590+0000] {subprocess.py:106} INFO - 
+[2026-05-11T19:30:48.591+0000] {subprocess.py:106} INFO - JSON report saved to: data/dq_report.json
+[2026-05-11T19:30:48.592+0000] {subprocess.py:106} INFO - Markdown report saved to: docs/dq_report.md
+[2026-05-11T19:30:48.592+0000] {subprocess.py:106} INFO - config used: configs/variant_06.yml
+[2026-05-11T19:30:48.593+0000] {subprocess.py:106} INFO - dq checks: PASS=19 WARNING=0 FAIL=0
+[2026-05-11T19:30:48.593+0000] {subprocess.py:106} INFO - dq files: data/dq_report.json, docs/dq_report.md
+[2026-05-11T19:30:48.718+0000] {subprocess.py:110} INFO - Command exited with return code 0
+[2026-05-11T19:30:48.752+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2026-05-11T19:30:48.753+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=etl_variant_06, task_id=dq, run_id=manual__2026-05-11T19:30:32+00:00, execution_date=20260511T193032, start_date=20260511T193046, end_date=20260511T193048
+[2026-05-11T19:30:48.834+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-05-11T19:30:48.859+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-05-11T19:30:48.863+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

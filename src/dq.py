@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -197,7 +198,8 @@ def summarize_results(layer_results: dict[str, list[dict]]) -> dict:
 
 def save_json_report(report: dict, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    payload = json.dumps(report, indent=2, ensure_ascii=False)
+    _safe_write_text(path, payload)
 
 
 def save_markdown_report(report: dict, path: Path) -> None:
@@ -222,7 +224,18 @@ def save_markdown_report(report: dict, path: Path) -> None:
         lines.append("")
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(lines), encoding="utf-8")
+    _safe_write_text(path, "\n".join(lines))
+
+
+def _safe_write_text(path: Path, text: str) -> None:
+    tmp_path = path.with_suffix(path.suffix + ".tmp")
+    tmp_path.write_text(text, encoding="utf-8")
+    try:
+        os.replace(tmp_path, path)
+    except PermissionError:
+        fallback = path.with_name(f"{path.stem}_latest{path.suffix}")
+        tmp_path.replace(fallback)
+        print(f"warning: report file was locked, saved fallback copy: {fallback}")
 
 
 def inject_demo_issues(dataframes: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:

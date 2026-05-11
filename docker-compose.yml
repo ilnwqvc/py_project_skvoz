@@ -1,3 +1,35 @@
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.10.5
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://student:student_pw@postgres:5432/analytics
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://student:student_pw@postgres:5432/analytics
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CORE__FERNET_KEY: ""
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+    AIRFLOW_UID: "50000"
+    _PIP_ADDITIONAL_REQUIREMENTS: pandas requests pyyaml numpy psycopg2-binary sqlalchemy
+    PYTHONPATH: /opt/airflow/project/src
+    DB_HOST: postgres
+    DB_PORT: "5432"
+    DB_USER: student
+    DB_PASSWORD: student_pw
+    DB_NAME: analytics
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - ./airflow/plugins:/opt/airflow/plugins
+    - ./airflow/config:/opt/airflow/config
+    - ./:/opt/airflow/project
+  user: "50000:0"
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
 services:
   postgres:
     image: postgres:16
@@ -28,6 +60,76 @@ services:
       - metabase_data:/metabase-data
     environment:
       MB_DB_FILE: /metabase-data/metabase.db
+
+  redis:
+    image: redis:7.2-bookworm
+    container_name: analytics_redis
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: analytics_airflow_init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate && \
+        airflow users create \
+          --username admin \
+          --firstname Airflow \
+          --lastname Admin \
+          --role Admin \
+          --email admin@example.com \
+          --password admin
+    restart: "no"
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: analytics_airflow_webserver
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: analytics_airflow_scheduler
+    command: scheduler
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-worker:
+    <<: *airflow-common
+    container_name: analytics_airflow_worker
+    command: celery worker
+    environment:
+      <<: *airflow-common-env
+      DUMB_INIT_SETSID: "0"
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-triggerer:
+    <<: *airflow-common
+    container_name: analytics_airflow_triggerer
+    command: triggerer
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:
