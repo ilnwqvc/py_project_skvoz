@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: analytics_postgres
+    environment:
+      POSTGRES_DB: analytics
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: student_pw
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U student -d analytics"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: analytics_metabase
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - metabase_data:/metabase-data
+    environment:
+      MB_DB_FILE: /metabase-data/metabase.db
+
+volumes:
+  pgdata:
+  metabase_data:
