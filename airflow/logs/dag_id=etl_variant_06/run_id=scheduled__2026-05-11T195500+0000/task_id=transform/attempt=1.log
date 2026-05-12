@@ -1,0 +1,30 @@
+[2026-05-11T20:00:03.985+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-05-11T20:00:04.017+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_variant_06.transform scheduled__2026-05-11T19:55:00+00:00 [queued]>
+[2026-05-11T20:00:04.025+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_variant_06.transform scheduled__2026-05-11T19:55:00+00:00 [queued]>
+[2026-05-11T20:00:04.025+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 1
+[2026-05-11T20:00:04.040+0000] {taskinstance.py:2890} INFO - Executing <Task(BashOperator): transform> on 2026-05-11 19:55:00+00:00
+[2026-05-11T20:00:04.045+0000] {warnings.py:112} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=465) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-05-11T20:00:04.046+0000] {standard_task_runner.py:72} INFO - Started process 466 to run task
+[2026-05-11T20:00:04.047+0000] {standard_task_runner.py:104} INFO - Running: ['airflow', 'tasks', 'run', 'etl_variant_06', 'transform', 'scheduled__2026-05-11T19:55:00+00:00', '--job-id', '36', '--raw', '--subdir', 'DAGS_FOLDER/etl_variant_06.py', '--cfg-path', '/tmp/tmpkgvx9f94']
+[2026-05-11T20:00:04.048+0000] {standard_task_runner.py:105} INFO - Job 36: Subtask transform
+[2026-05-11T20:00:04.097+0000] {task_command.py:467} INFO - Running <TaskInstance: etl_variant_06.transform scheduled__2026-05-11T19:55:00+00:00 [running]> on host d1b991a5d492
+[2026-05-11T20:00:04.182+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='etl_variant_06' AIRFLOW_CTX_TASK_ID='transform' AIRFLOW_CTX_EXECUTION_DATE='2026-05-11T19:55:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-05-11T19:55:00+00:00'
+[2026-05-11T20:00:04.184+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2026-05-11T20:00:04.195+0000] {subprocess.py:78} INFO - Tmp dir root location: /tmp
+[2026-05-11T20:00:04.196+0000] {subprocess.py:88} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/airflow/project && export PYTHONIOENCODING=UTF-8 && python src/etl_steps.py transform --config configs/variant_06.yml --mode full']
+[2026-05-11T20:00:04.204+0000] {subprocess.py:99} INFO - Output:
+[2026-05-11T20:00:05.381+0000] {subprocess.py:106} INFO - NORMALIZED обновлен
+[2026-05-11T20:00:05.381+0000] {subprocess.py:106} INFO - MART обновлен
+[2026-05-11T20:00:05.382+0000] {subprocess.py:106} INFO - config used: configs/variant_06.yml
+[2026-05-11T20:00:05.382+0000] {subprocess.py:106} INFO - raw source: data/raw/JP_TYO/JP_TYO_20260511_200003.json
+[2026-05-11T20:00:05.383+0000] {subprocess.py:106} INFO - normalized rows: 696
+[2026-05-11T20:00:05.383+0000] {subprocess.py:106} INFO - mart rows: 29
+[2026-05-11T20:00:05.383+0000] {subprocess.py:106} INFO - saved files: data/normalized/normalized.csv, data/mart/mart.csv
+[2026-05-11T20:00:05.463+0000] {subprocess.py:110} INFO - Command exited with return code 0
+[2026-05-11T20:00:05.486+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2026-05-11T20:00:05.487+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=etl_variant_06, task_id=transform, run_id=scheduled__2026-05-11T19:55:00+00:00, execution_date=20260511T195500, start_date=20260511T200004, end_date=20260511T200005
+[2026-05-11T20:00:05.545+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-05-11T20:00:05.567+0000] {taskinstance.py:3901} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-05-11T20:00:05.571+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
