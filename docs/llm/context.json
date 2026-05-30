@@ -1,0 +1,58 @@
+{
+  "dataset_identity": {
+    "variant_id": "06",
+    "source": "open_meteo",
+    "city_id": "JP_TYO",
+    "city_name": "Токио",
+    "period_start": "2026-02-01",
+    "period_end": "2026-03-01"
+  },
+  "schema_hints": {
+    "mart_grain": "1 строка = 1 день по 1 городу",
+    "table_name": "mart_variant_06",
+    "row_count": "29"
+  },
+  "computed_metrics": {
+    "t_mean_avg": "7.72",
+    "t_mean_min": "-1.77",
+    "t_mean_min_date": "2026-02-08",
+    "t_mean_max": "17.59",
+    "t_mean_max_date": "2026-02-23",
+    "p_sum_total": "84.30",
+    "p_sum_max": "49.50",
+    "p_sum_max_date": "2026-02-25",
+    "wind_max_max": "23.80",
+    "rainy_hours_total": "74",
+    "last_date": "2026-03-01",
+    "last_t_mean": "11.47",
+    "prev_date": "2026-02-28",
+    "prev_t_mean": "12.62",
+    "last_vs_prev_t_mean_diff": "-1.15",
+    "top_precip_days": [
+      {
+        "date": "2026-02-25",
+        "P_sum": "49.50"
+      },
+      {
+        "date": "2026-02-11",
+        "P_sum": "13.50"
+      },
+      {
+        "date": "2026-02-08",
+        "P_sum": "8.60"
+      }
+    ]
+  },
+  "quality_status": {
+    "overall_status": "PASS",
+    "pass_count": "19",
+    "warning_count": "0",
+    "fail_count": "0"
+  },
+  "constraints": [
+    "Do not invent numbers.",
+    "Use only provided metrics.",
+    "If uncertain, say uncertain.",
+    "Do not calculate new metrics."
+  ]
+}
