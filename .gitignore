@@ -1,7 +1,10 @@
 .env
+broken_env.py
+.jupyter/
+.vscode/
 .venv/
 __pycache__/
 *.pyc
 .docker/
 airflow/logs/
-
+data/raw/JP_TYO/JP_TYO_202605*.json

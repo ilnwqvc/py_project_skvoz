@@ -7,12 +7,12 @@
 - BI через Metabase
 - Airflow DAG
 - простой ML-блок
-- LLM-сводка по агрегатам из `mart`
+- сводка по агрегатам из `mart`
 
 ## Что в итоге получается
 
 Основные артефакты:
-- `data/raw/` — raw JSON
+- `data/raw/` - raw JSON
 - `data/normalized/normalized.csv`
 - `data/mart/mart.csv`
 - `data/dq_report.json`
@@ -32,7 +32,7 @@
 Этот скрипт:
 1. поднимает Docker-сервисы
 2. запускает ETL-пайплайн
-3. строит LLM-сводку
+3. строит сводку по `mart`
 
 ## Если запускать руками
 
@@ -60,7 +60,7 @@ docker compose ps
 .\.venv\Scripts\python.exe src/pipeline.py --config configs/variant_06.yml --mode full
 ```
 
-### 4. Построить LLM-сводку
+### 4. Построить сводку
 
 ```powershell
 .\.venv\Scripts\python.exe src/llm_summary.py --config configs/variant_06.yml
@@ -69,7 +69,7 @@ docker compose ps
 ## BI
 
 BI сделан через Metabase.  
-Источник графиков — таблица `mart_variant_06` в Postgres.
+Источник графиков - таблица `mart_variant_06` в Postgres.
 
 Материалы лежат в:
 - `docs/bi/`
@@ -98,15 +98,15 @@ DAG:
 
 Для week13 сделан простой сценарий A:
 - классификация дождливого часа
-- baseline + LogisticRegression
+- бейзлайн + LogisticRegression
 
 Файлы:
 - `notebooks/week13_ml.ipynb`
 - `docs/ml/`
 
-## LLM
+## Сводка по mart
 
-LLM-шаг сделан отдельно, не внутри середины пайплайна.
+Этот шаг сделан отдельно от основного ETL.
 
 Файлы:
 - `src/llm_summary.py`
@@ -114,16 +114,15 @@ LLM-шаг сделан отдельно, не внутри середины п�
 - `docs/LLM_Usage_Log.md`
 
 Важно:
-- в LLM передаются только агрегаты
-- модель не должна считать числа сама
-- цифры в summary проверяются кодом
+- в запрос уходят только готовые агрегаты
+- числа считаются кодом до запроса
+- цифры в итоговом файле проверяются кодом
 
 ## Переменные окружения
 
-Для LLM используется переменная:
+Для внешнего API используется переменная:
 - `OPENAI_API_KEY`
 
 В репозиторий ключ не кладется.  
 Есть шаблон:
 - `.env.example`
-

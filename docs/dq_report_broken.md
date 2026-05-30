@@ -1,12 +1,15 @@
-# DQ Report
+# DQ-отчет
 
-- Overall status: **FAIL**
-- PASS: 10
+- Итоговый статус: **FAIL**
+- PASS: 12
 - FAIL: 4
 - WARNING: 3
 
-## Layer: normalized
+## Слой: normalized
 
+- normalized_expected_columns: PASS (FAIL)
+  Причина: Список колонок совпадает с контрактом
+  Детали: {"columns": ["ts", "temperature_2m", "relative_humidity_2m", "precipitation", "wind_speed_10m", "city_id"]}
 - normalized_not_empty: PASS (FAIL)
   Причина: Таблица не пустая
   Детали: {"row_count": 697}
@@ -35,8 +38,11 @@
   Причина: Есть значения вне допустимого списка
   Детали: {"column": "city_id", "allowed": ["JP_TYO"], "invalid_rows": 1, "sample": [{"city_id": NaN}]}
 
-## Layer: mart
+## Слой: mart
 
+- mart_expected_columns: PASS (FAIL)
+  Причина: Список колонок совпадает с контрактом
+  Детали: {"columns": ["date", "city_id", "T_mean", "P_sum", "wind_max", "rainy_hours"]}
 - mart_not_empty: PASS (FAIL)
   Причина: Таблица не пустая
   Детали: {"row_count": 29}

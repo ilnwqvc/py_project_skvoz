@@ -85,10 +85,10 @@ def build_context(cfg: dict, mart: pd.DataFrame, dq_report: dict) -> dict:
             "fail_count": str(dq_report["summary"]["counts"]["FAIL"]),
         },
         "constraints": [
-            "Do not invent numbers.",
-            "Use only provided metrics.",
-            "If uncertain, say uncertain.",
-            "Do not calculate new metrics.",
+            "Не придумывать числа.",
+            "Использовать только переданные метрики.",
+            "Если данных не хватает, прямо написать об этом.",
+            "Не считать новые метрики внутри ответа.",
         ],
     }
     return context
@@ -167,7 +167,7 @@ def verify_summary(summary: str, context: dict) -> tuple[bool, list[str]]:
     return len(bad) == 0, bad
 
 
-def fallback_summary(context: dict) -> str:
+def local_summary(context: dict) -> str:
     c = context
     m = c["computed_metrics"]
     q = c["quality_status"]
@@ -175,9 +175,9 @@ def fallback_summary(context: dict) -> str:
     top_day = m["top_precip_days"][0]
 
     return (
-        "# LLM Summary\n\n"
-        "_Ниже сохранен безопасный fallback-текст, потому что OpenAI API ключ не задан "
-        "или ответ модели не прошел проверку чисел._\n\n"
+        "# Сводка по mart\n\n"
+        "_Сводка собрана локально из уже посчитанных агрегатов. Внешний API не вызывался, "
+        "если ключ не задан или ответ не прошел проверку чисел._\n\n"
         f"- Период данных: {d['period_start']} - {d['period_end']}. В mart сейчас {c['schema_hints']['row_count']} строк.\n"
         f"- Средняя дневная температура по всему периоду: {m['t_mean_avg']}. Минимум {m['t_mean_min']} был {m['t_mean_min_date']}, максимум {m['t_mean_max']} был {m['t_mean_max_date']}.\n"
         f"- Сумма осадков за период: {m['p_sum_total']}. Самый дождливый день: {top_day['date']} с {top_day['P_sum']}.\n"
@@ -220,10 +220,10 @@ def main() -> None:
     api_key = os.getenv("OPENAI_API_KEY", "").strip()
     model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip() or "gpt-4.1-mini"
 
-    mode = "fallback_no_key"
-    verification = "not_checked"
-    notes = "OPENAI_API_KEY not set"
-    summary = fallback_summary(context)
+    mode = "local_summary"
+    verification = "not_needed"
+    notes = "API key is not set"
+    summary = local_summary(context)
 
     if api_key:
         try:
@@ -233,13 +233,13 @@ def main() -> None:
                 mode = "llm_verified"
                 verification = "passed"
                 notes = "all numeric tokens matched context"
-                summary = "# LLM Summary\n\n" + llm_text.strip() + "\n"
+                summary = "# Сводка по mart\n\n" + llm_text.strip() + "\n"
             else:
-                mode = "fallback_after_failed_verification"
+                mode = "local_summary_after_check_failed"
                 verification = "failed"
                 notes = f"unexpected tokens: {', '.join(bad_tokens[:10])}"
         except Exception as e:
-            mode = "fallback_after_api_error"
+            mode = "local_summary_after_api_error"
             verification = "failed"
             notes = str(e).replace("|", "/")
 

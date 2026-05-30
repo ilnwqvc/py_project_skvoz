@@ -204,9 +204,9 @@ def save_json_report(report: dict, path: Path) -> None:
 
 def save_markdown_report(report: dict, path: Path) -> None:
     lines = [
-        "# DQ Report",
+        "# DQ-отчет",
         "",
-        f"- Overall status: **{report['summary']['overall_status']}**",
+        f"- Итоговый статус: **{report['summary']['overall_status']}**",
         f"- PASS: {report['summary']['counts']['PASS']}",
         f"- FAIL: {report['summary']['counts']['FAIL']}",
         f"- WARNING: {report['summary']['counts']['WARNING']}",
@@ -214,7 +214,7 @@ def save_markdown_report(report: dict, path: Path) -> None:
     ]
 
     for layer, results in report["layers"].items():
-        lines.append(f"## Layer: {layer}")
+        lines.append(f"## Слой: {layer}")
         lines.append("")
         for result in results:
             lines.append(f"- {result['name']}: {result['status']} ({result['severity']})")
@@ -233,9 +233,9 @@ def _safe_write_text(path: Path, text: str) -> None:
     try:
         os.replace(tmp_path, path)
     except PermissionError:
-        fallback = path.with_name(f"{path.stem}_latest{path.suffix}")
-        tmp_path.replace(fallback)
-        print(f"warning: report file was locked, saved fallback copy: {fallback}")
+        backup_path = path.with_name(f"{path.stem}_latest{path.suffix}")
+        tmp_path.replace(backup_path)
+        print(f"warning: отчет был занят, копия сохранена: {backup_path}")
 
 
 def inject_demo_issues(dataframes: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:

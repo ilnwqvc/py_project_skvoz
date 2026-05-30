@@ -50,9 +50,9 @@
     "fail_count": "0"
   },
   "constraints": [
-    "Do not invent numbers.",
-    "Use only provided metrics.",
-    "If uncertain, say uncertain.",
-    "Do not calculate new metrics."
+    "Не придумывать числа.",
+    "Использовать только переданные метрики.",
+    "Если данных не хватает, прямо написать об этом.",
+    "Не считать новые метрики внутри ответа."
   ]
 }

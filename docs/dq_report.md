@@ -1,11 +1,11 @@
-# DQ Report
+# DQ-отчет
 
-- Overall status: **PASS**
+- Итоговый статус: **PASS**
 - PASS: 19
 - FAIL: 0
 - WARNING: 0
 
-## Layer: normalized
+## Слой: normalized
 
 - normalized_expected_columns: PASS (FAIL)
   Причина: Список колонок совпадает с контрактом
@@ -38,7 +38,7 @@
   Причина: Недопустимых значений не найдено
   Детали: {"column": "city_id", "allowed": ["JP_TYO"]}
 
-## Layer: mart
+## Слой: mart
 
 - mart_expected_columns: PASS (FAIL)
   Причина: Список колонок совпадает с контрактом
